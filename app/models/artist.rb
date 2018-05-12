@@ -3,18 +3,23 @@ class Artist
 
   def initialize(artist_name)
     @name = artist_name
-    @mbid = mbid_helper.artist_id(artist_name)
     @events = []
+    add_events
   end
 
   def add_events
+    return if event_data.blank?
     event_data.each do |event_data|
       @events.push(Concert.new(event_data))
     end
   end
 
+  def get_upcoming_events
+    @events
+  end
+
   def event_data
-    event_helper.artist_setlists(@mbid).body['setlist']
+    event_helper.search_setlists(@name).body['setlist']
   end
 
   def mbid_helper

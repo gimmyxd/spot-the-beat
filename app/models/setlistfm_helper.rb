@@ -68,5 +68,9 @@ class SetlistfmHelper
     @http.get "/rest/#{@api_version}/1.0/search/cities"
   end
 
+  def search_setlists name
+    @http.get "/rest/#{@api_version}/search/setlists/?artistName=#{name}&p=1&year=#{Date.current.year}"
+  end
+
   freeze
 end
