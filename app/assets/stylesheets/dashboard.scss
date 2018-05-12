@@ -64,6 +64,14 @@
   margin-left: 90px;
 }
 
-.map.map-bg, .filters.map-filters {
-  display:inline-block;
+.map-bg, .map-filters {
+  display: inline-block;
+}
+
+.map-filters {
+  width: 18%;
+  position: absolute;
+  top: 56px;
+  padding-left: 2px;
+  height: 500px
 }

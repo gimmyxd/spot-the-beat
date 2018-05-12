@@ -20,6 +20,7 @@ platform = new (H.service.Platform)(
 map = null
 ui = null
 group = new (H.map.Group)
+accGroup = new (H.map.Group)
 offset = 0
 geocoder = platform.getGeocodingService()
 lat = null
@@ -27,11 +28,26 @@ long = null
 crd = null
 options =
   enableHighAccuracy: true
-  timeout: 5000
+  timeout: 10000
   maximumAge: 0
+search = new (H.places.Search)(platform.getPlacesService())
+searchResult = undefined
+error = undefined
 
 err = (err) ->
+  error = err
   console.log err
+  return
+
+onResult = (data) ->
+  searchResult = data
+#  console.log('searchResult > ', data)
+  addAccomodationMarkers(searchResult)
+  return
+
+onError = (data) ->
+  error = data
+#  console.log('error > ', data)
   return
 
 events = (lat, long) ->
@@ -63,28 +79,42 @@ show = (lat, long, datapoints) ->
 # Instantiate the map:
   if map == null
     map = new (H.Map)(document.getElementById('mapContainer'), platform.createDefaultLayers().normal.map,
-      zoom: 5
+      zoom: 3
       center:
         lat: lat
         lng: long)
+
     behavior = new (H.mapevents.Behavior)(new (H.mapevents.MapEvents)(map))
     ui  = H.ui.UI.createDefault(map, platform.createDefaultLayers())
     map.addObject group
+
   circleRadius = 300000
   circle = new (H.map.Circle)(new (H.geo.Point)(lat, long), circleRadius)
   map.addObject circle
+
   # add 'tap' event listener, that opens info bubble, to the group
   group.addEventListener 'tap', ((evt) ->
-    ui.addBubble new (H.ui.InfoBubble)(evt.target.getPosition(), content: evt.target.getData())
+    loc = evt.target.getPosition()
+    map.setZoom(14)
+    map.setCenter(loc)
+    ui.addBubble new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+
+    params = {q: 'hotel', at: "#{loc.lat},#{loc.lng}"}
+
+    search.request params, {}, onResult, onError
+
     return
   ), false
+
   $('#area-size').on 'change', (event) ->
     newRadius = $(this).val()
     circle.setRadius newRadius
-    $('.area-size-badge').html newRadius / 1000 + 'km'
+    $('.area-size-badge').html newRadius / 1000 + ' (km)'
     updateMarkers group, circle, newRadius, datapoints
     return
+
   $('#area-size').trigger 'change'
+
   return
 
 addMarkerToGroup = (group, coordinate, html) ->
@@ -152,6 +182,24 @@ updateMarkers = (group, circle, newRadius, datapoints) ->
 
 isInsideRadius = (origin, target, radius) ->
   origin.distance(target) <= radius
+
+addAccomodationMarkers = (searchResult) ->
+  accGroup.removeAll()
+  accGroup = new (H.map.Group)
+  $.each searchResult.results.items, (_, item) ->
+    icon = new H.map.Icon(item.icon, {size: {w: 32, h: 32}})
+    marker = new (H.map.Marker)({lat: item.position[0], lng: item.position[1]}, {icon: icon})
+    marker.setData item.title
+    accGroup.addObject marker
+    return
+
+  map.addObject(accGroup)
+
+  accGroup.addEventListener 'tap', (evt) ->
+    loc = evt.target.getPosition()
+    ui.addBubble new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+    return
+  return
 
 document.addEventListener 'turbolinks:load', ->
   navigator.geolocation.getCurrentPosition ((pos) ->
