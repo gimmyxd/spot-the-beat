@@ -69,9 +69,15 @@
 }
 
 .map-filters {
-  width: 18%;
+  width: 20%;
   position: absolute;
-  top: 56px;
-  padding-left: 2px;
+  top: 44px;
   height: 500px
+}
+
+.map-options {
+  height: 300px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #eff;
 }
