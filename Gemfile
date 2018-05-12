@@ -38,8 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'materialize-sass', '~> 1.0.0.rc1'
 gem 'material_icons'
-
-gem 'omniauth-spotify'
+gem 'jquery-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -58,3 +57,9 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'omniauth-oauth2', '1.3.1'
+gem 'rspotify'
+gem 'dotenv-rails'
+
+gem 'rails_admin'

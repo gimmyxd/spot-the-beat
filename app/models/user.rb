@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+<<<<<<< HEAD
 
   def self.create_with_omniauth(auth)
     create! do |user|
@@ -12,4 +13,6 @@ class User < ApplicationRecord
     uid
   end
 
+=======
+>>>>>>> master
 end

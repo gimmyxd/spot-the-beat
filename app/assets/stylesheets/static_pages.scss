@@ -1,0 +1,31 @@
+// Place all the styles related to the static_pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.landing {
+  background-image: url('landing');
+  width: 100%;
+  background-repeat: repeat;
+  background-size: cover
+}
+
+.login-text {
+  text-align: center;
+  vertical-align: center;
+  text-transform: none;
+}
+
+.login {
+  appearance: none;
+  vertical-align: center;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  height: 45px;
+  left: 50%;
+  top: 30%;
+  margin-top: -15px;   /* = -height / 2   */
+  margin-left: -100px; /* = -width / 2    */
+  position: fixed;     /* Fixed is better */
+
+}
