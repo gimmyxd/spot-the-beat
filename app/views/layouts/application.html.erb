@@ -5,8 +5,24 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+
+    <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+            type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+            type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-clustering.js"
+            type="text/javascript" charset="utf-8"></script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
     <%= favicon_link_tag 'fav.png', type: 'image/png'%>
+    <%= yield :javascripts %>
+
   </head>
 
   <%= render partial: "layouts/navbar"%>

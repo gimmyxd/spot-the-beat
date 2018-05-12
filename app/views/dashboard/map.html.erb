@@ -1,0 +1,93 @@
+
+<!-- BODY -->
+<h1>Map at a specified location</h1>
+<p>This example displays a movable map initially centered on the <b>Brandenburg Gate</b> in the centre of Berlin (<i>52.5159°N, 13.3777°E</i>)</p>
+<hr/>
+<div id="mapContainer" style="width: 600px; height: 400px; background: grey"></div>
+
+<% content_for :javascripts do %>
+  <script>
+
+      var geocodingParams = {
+          searchText: 'Arad, Periam, Remetea Mare'
+      };
+
+      var platform = new H.service.Platform({
+          'app_id': 'ABCiZ2b67vjKqbX6E1ZJ',
+          'app_code': 'do7aaovSpr9tNPfJkLxG4Q'
+      });
+      var geocoder = platform.getGeocodingService();
+
+      var options = {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+      };
+
+      var err = function(err) {
+        console.log(err);
+      };
+
+      var dataPoints = function() {
+          var dataPoints = [];
+          dataPoints.push(new H.clustering.DataPoint(51.01, 0.01));
+          dataPoints.push(new H.clustering.DataPoint(50.04, 1.01));
+          dataPoints.push(new H.clustering.DataPoint(51.45, 1.01));
+          dataPoints.push(new H.clustering.DataPoint(51.01, 2.01));
+
+
+          return dataPoints;
+      };
+      var show = function(lat, long) {
+          // Instantiate the map:
+          var map = new H.Map(
+              document.getElementById('mapContainer'),
+              platform.createDefaultLayers().normal.map,
+              {
+                  zoom: 8,
+                  center: { lat: lat, lng: long }
+              });
+          var clusteredDataProvider = new H.clustering.Provider(dataPoints);
+
+// Create a layer that includes the data provider and its data points:
+          var layer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+
+// Add the layer to the map:
+          map.addLayer(layer);
+
+      };
+
+      document.addEventListener("turbolinks:load", function () {
+          navigator.geolocation.getCurrentPosition(
+              function(pos) {
+                  var crd = pos.coords;
+                  show(crd.latitude, crd.longitude)
+              }, err, options);
+
+          // App Id  :
+          //     ABCiZ2b67vjKqbX6E1ZJ
+          // App Code :
+          //     do7aaovSpr9tNPfJkLxG4Q
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              });
+  </script>
+
+<% end %>

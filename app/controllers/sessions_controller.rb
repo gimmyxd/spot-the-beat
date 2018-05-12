@@ -22,6 +22,10 @@ class SessionsController < ApplicationController
     redirect_to root_url
   end
 
+  def map
+    render 'dashboard/map'
+  end
+
   private
 
   def auth

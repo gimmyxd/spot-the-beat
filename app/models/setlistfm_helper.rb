@@ -69,7 +69,11 @@ class SetlistfmHelper
   end
 
   def search_setlists name
-    @http.get "/rest/#{@api_version}/search/setlists/?artistName=#{name}&p=1&year=#{Date.current.year}"
+    @http.get "/rest/#{@api_version}/search/setlists/" do |r|
+      r[:artistName]=name
+      r[:p]= '1'
+      r[:year] = Date.current.year.to_s
+    end
   end
 
   freeze

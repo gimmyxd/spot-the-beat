@@ -15,7 +15,7 @@ class Artist
   end
 
   def get_upcoming_events
-    JSON.parse(@events.to_json)
+    @events
   end
 
   def event_data
