@@ -29,5 +29,7 @@ module SpotTheBeat
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    RSpotify::authenticate(ENV['SPOTIFY_CLIENT_ID'], ENV['SPOTIFY_CLIENT_SECRET'])
   end
 end

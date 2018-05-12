@@ -1,1 +1,6 @@
 
+Hello <%= @spotify_user.display_name %>,
+
+<%@spotify_user.top_artists.each do |t|%>
+  <%=t.to_json%>
+<%end%>
