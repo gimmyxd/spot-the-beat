@@ -3,7 +3,7 @@
 <h1>Map at a specified location</h1>
 <p>This example displays a movable map initially centered on the <b>Brandenburg Gate</b> in the centre of Berlin (<i>52.5159°N, 13.3777°E</i>)</p>
 <hr/>
-<div id="mapContainer" style="width: 1000px; height: 700px; background: grey"></div>
+<div class="map map-bg" id="mapContainer" style="width: 1000px; height: 700px; background: grey"></div>
 <input type="button" id="next" value="Next" onclick="next_events()"/>
 <input type="button" id="focus" value="Focus" onclick="focus_on_events()"/>
 
@@ -67,25 +67,54 @@
                   document.getElementById('mapContainer'),
                   platform.createDefaultLayers().normal.map,
                   {
-                      zoom: 3,
+                      zoom: 5,
                       center: { lat: lat, lng: long }
                   });
               behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
               ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
 
+
               map.addObject(group);
           }
+
+          var circleRadius = 300000;
+          var circle = new H.map.Circle(new H.geo.Point(lat,long), circleRadius);
+          map.addObject(circle);
 
           // add 'tap' event listener, that opens info bubble, to the group
           group.addEventListener('tap', function (evt) {
               ui.addBubble(new H.ui.InfoBubble(evt.target.getPosition(), {content: evt.target.getData()}));
           }, false);
 
-          $.each(datapoints, function(key, val) {
-              addMarkerToGroup(group, {lat: val['coords']['lat'], lng: val['coords']['long']}, '<div>' + val['artist'] + ', on: ' + val['date'] + '</div>');
+          $('#area-size').on('change', function(event) {
+            var newRadius = $(this).val();
+            circle.setRadius(newRadius);
+
+            $('.area-size-badge').html(newRadius/1000 + 'km');
+
+            updateMarkers(group, circle, newRadius, datapoints);
           });
 
+          $('#area-size').trigger('change');
       };
+
+      function updateMarkers(group, circle, newRadius, datapoints) {
+        group.removeAll();
+
+        $.each(datapoints, function(key, val) {
+          var lat = val['coords']['lat'],
+              lng = val['coords']['long'];
+          var origin = circle.getCenter();
+          var target = new H.geo.Point(lat, lng);
+          if (isInsideRadius(origin, target, newRadius)) {
+            addMarkerToGroup(group, {lat: lat, lng: lng}, '<div>' + val['artist'] + ', on: ' + val['date'] + '</div>');
+          }
+        });
+      }
+
+      function isInsideRadius(origin, target, radius) {
+        return origin.distance(target) <= radius;
+      }
 
       var addMarkerToGroup = function(group, coordinate, html) {
           var marker = new H.map.Marker(coordinate);
@@ -150,3 +179,31 @@
   </script>
 
 <% end %>
+
+<div class="filters map-filters row">
+
+  <form class="col l12 md6 s3" action="#">
+
+    <!--<div class="card-content"><span class="card-title">Cards</span><h5>Basic card</h5><div class="row"><div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Card Title</span><p>I am a very simple card. I am good at containing small bits of information.I am convenient because I require little markup to use effectively.</p></div><div class="card-action"><a href="#"> This is a link</a><a href="#"> This is a link</a></div></div></div></div><h5>Image card</h5><div class="row"><div class="col s12 m7"><div class="card"><div class="card-image"><img src="http://materializecss.com/images/sample-1.jpg"><span class="card-title">Card Title</span></div><div class="card-content"><p>I am a very simple card. I am good at containing small bits of information.I am convenient because I require little markup to use effectively.</p></div><div class="card-action"><a href="#"> This is a link</a></div></div></div></div><div class="row"><div class="col s12 m6"><div class="card"><div class="card-image"><img src="http://materializecss.com/images/sample-1.jpg"><span class="card-title">Card Title</span><a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a></div><div class="card-content"><p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p></div></div></div></div></div>-->
+
+    <div class="card" style="height: 650px">
+      <div class="card-content">
+
+        <span class="card-title">
+          Filter events
+        </span>
+
+        <div class="row">
+          <h5>Area size</h5>
+
+          <div class="range-field">
+            <div class="area-size-badge badge"></div>
+            <input id="area-size" type="range" value="100000" min="1000" max="10000000">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+</div>

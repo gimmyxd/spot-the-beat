@@ -6,6 +6,10 @@ class ApplicationController < ActionController::Base
   helper_method :current_spotify_user
   helper_method :user_signed_in?
 
+  rescue_from RestClient::Forbidden do |_|
+    redirect_to root_url
+  end
+
   protected
 
   def current_user

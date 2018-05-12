@@ -29,3 +29,4 @@
 
 .env
 master.key
+.DS_Store
