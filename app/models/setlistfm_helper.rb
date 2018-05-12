@@ -16,7 +16,7 @@ class SetlistfmHelper
     @http = Faraday.new(@url) do |f|
       f.headers[:user_agent] = "Setlistfm/#{SetlistfmHelper::VERSION}"
       f.headers['Accept'] = 'application/json'
-      f.headers['x-api-key'] = '1e56c04c-95a2-4641-8219-1cf8cfdf6041'
+      f.headers['x-api-key'] = Rails.application.credentials.setlistfm[:api_key]
       f.request  :url_encoded
       f.response :json
       f.use      :gzip
