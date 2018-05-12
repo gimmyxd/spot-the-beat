@@ -3,9 +3,12 @@
     <div class="nav-wrapper container">
       <a href="#" class="brand-logo"><%= image_tag('logo')%></a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <a class="dropdown-trigger right hide-on-med-and-down" href="#!" data-target="dropdown1">
-        Hello, @username<i class="material-icons right">arrow_drop_down</i>
-      </a>
+      <% if @spotify_user %>
+        <a class="dropdown-trigger right hide-on-med-and-down" href="#!" data-target="dropdown1">
+          <%= image_tag  @spotify_user.images.first['url'], class: 'avatar' %>
+          <div> <%= @spotify_user.display_name %> <i class="material-icons right">arrow_drop_down</i></div>
+        </a>
+      <% end %>
       <ul id="dropdown1" class="dropdown-content">
         <li><a href="#!">one</a></li>
         <li><a href="#!">two</a></li>

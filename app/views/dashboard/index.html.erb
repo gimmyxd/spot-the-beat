@@ -1,6 +1,3 @@
-
-Hello <%= @spotify_user.display_name %> <img src="<%= @spotify_user.images.first['url'] %>"%>, <br>
-
 <%@spotify_user.top_artists.each do |a|%>
   <%= a.name%> </br>
   <img src="<%= a.images.first['url'] rescue nil %>"/> <br/>
