@@ -6,10 +6,10 @@
     <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
     <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
     <% Array(concerts || []).each do |concert| %>
-      <div class="container">
+      <div class="container events-list">
         <div class="row">
-          <div class="col s2 m2 h2"></div>
-          <div id="events" class="col s8 m8 l8">
+          <div class="col s1 m1 h1"></div>
+          <div id="events" class="col s10 m10 l10">
             <div class="row">
               <div class="card sticky-action horizontal">
                 <div class="card-image waves-effect waves-block waves-light">
@@ -22,10 +22,10 @@
                       <p>Venue: <%= concert.venue %></p>
                       <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
                       <p>Date: <%= concert.date %></p>
-
-                      <% binding.pry %>
-                      <a class="btn search" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
-                      <a class="btn search" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
+                      <div class="promo-buttons">
+                        <a class="btn" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
+                        <a class="btn right buy" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
+                      </div>
                     </span>
                   </div>
                 </div>
