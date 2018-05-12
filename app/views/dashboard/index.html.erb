@@ -2,9 +2,9 @@
 <%= render partial: "filters" %>
 
 <% (@events || []).each_value do |artist_concerts| %>
-  <% artist_name = artist_concerts[0].artist if artist_concerts[0].respond_to?(:artist)%>
-  <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
   <% Array(artist_concerts || []).each do |concerts| %>
+    <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
+    <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
     <% Array(concerts || []).each do |concert| %>
       <div class="container">
         <div class="row">
