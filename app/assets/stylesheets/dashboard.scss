@@ -7,7 +7,7 @@
 }
 
 .map {
-  width: 100%;
+  width: 80%;
   height: 300px;
   background-color: #eff;
 }
@@ -62,4 +62,16 @@
 
 .buy {
   margin-left: 90px;
+}
+
+.map-bg, .map-filters {
+  display: inline-block;
+}
+
+.map-filters {
+  width: 18%;
+  position: absolute;
+  top: 56px;
+  padding-left: 2px;
+  height: 500px
 }
