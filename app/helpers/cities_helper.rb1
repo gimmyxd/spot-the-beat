@@ -1,0 +1,23 @@
+require 'faraday'
+
+module Cities
+  TM_lat = '45.7494'
+  TM_lng = '21.2272'
+  def self.get(radius = 100, lat = TM_lat, long = TM_lng)
+        Faraday.new("http://getnearbycities.geobytes.com") do |conn|
+          conn.use FaradayMiddleware::FollowRedirects;
+          conn.response :json, :content_type => /\bjson$/
+          conn.request :url_encoded
+          conn.response( :logger, ::Logger.new(STDOUT), bodies: true)
+          # Last middleware must be the adapter:
+          conn.adapter :net_http
+        end.get('GetNearbyCities') do |req|
+          req.params['radius'] = radius
+          req.params['lat'] = lat
+          req.params['lng'] = long
+    end.body.inject([]){|acc, e| acc << {name: e[1], lat: e[8], long: e[10]}; acc }
+  end
+end
+
+
+http://getnearbycities.geobytes.com/GetNearbyCities?
