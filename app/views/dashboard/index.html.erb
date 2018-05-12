@@ -23,8 +23,10 @@
                       <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
                       <p>Date: <%= concert.date %></p>
 
-                      <a class="btn search" href="https://www.eventbrite.com/d/<%= concert.country['name'] %>--<%= concert.city %>/<%= artist_name %>/?q=<%= artist_name %>&loc=<%= concert.city %>&date=" target="_blank">Buy your ticket!</a>
-                      </span>
+                      <% binding.pry %>
+                      <a class="btn search" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
+                      <a class="btn search" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
+                    </span>
                   </div>
                 </div>
                 <div class="card-reveal">
