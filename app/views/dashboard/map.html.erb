@@ -3,14 +3,10 @@
 <h1>Map at a specified location</h1>
 <p>This example displays a movable map initially centered on the <b>Brandenburg Gate</b> in the centre of Berlin (<i>52.5159°N, 13.3777°E</i>)</p>
 <hr/>
-<div id="mapContainer" style="width: 600px; height: 400px; background: grey"></div>
+<div id="mapContainer" style="width: 1000px; height: 700px; background: grey"></div>
 
 <% content_for :javascripts do %>
   <script>
-
-      var geocodingParams = {
-          searchText: 'Arad, Periam, Remetea Mare'
-      };
 
       var platform = new H.service.Platform({
           'app_id': 'ABCiZ2b67vjKqbX6E1ZJ',
@@ -28,64 +24,64 @@
         console.log(err);
       };
 
-      var dataPoints = function() {
-          var dataPoints = [];
-          dataPoints.push(new H.clustering.DataPoint(51.01, 0.01));
-          dataPoints.push(new H.clustering.DataPoint(50.04, 1.01));
-          dataPoints.push(new H.clustering.DataPoint(51.45, 1.01));
-          dataPoints.push(new H.clustering.DataPoint(51.01, 2.01));
+      var events = function(lat, long) {
+          $.getJSON( "/dashboard.json", function( data ) {
+              var datapoints = [];
+              $.each(data, function( key, val ) {
+                  $.each(val, function( key1, val1 ) {
+                      datapoints.push(val1);
+                  });
+              });
+              show(lat,long, datapoints);
+          });
 
-
-          return dataPoints;
       };
-      var show = function(lat, long) {
+      var show = function(lat, long, datapoints) {
           // Instantiate the map:
           var map = new H.Map(
               document.getElementById('mapContainer'),
               platform.createDefaultLayers().normal.map,
               {
-                  zoom: 8,
+                  zoom: 3,
                   center: { lat: lat, lng: long }
               });
-          var clusteredDataProvider = new H.clustering.Provider(dataPoints);
+          var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+          var ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
 
-// Create a layer that includes the data provider and its data points:
-          var layer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+          var group = new H.map.Group();
+          map.addObject(group);
 
-// Add the layer to the map:
-          map.addLayer(layer);
+          // add 'tap' event listener, that opens info bubble, to the group
+          group.addEventListener('tap', function (evt) {
+              alert('click happened');
+              ui.addBubble(new H.ui.InfoBubble(evt.target.getPosition(), {content: evt.target.getData()}));
+          }, false);
+
+          $.each(datapoints, function(key, val) {
+             addMarkerToGroup(group, {lat: val['coords']['lat'], lng: val['coords']['long']}, '<div>' + val['artist'] + ', on: ' + val['date'] + '</div>');
+          });
 
       };
+
+      var addMarkerToGroup = function(group, coordinate, html) {
+          var marker = new H.map.Marker(coordinate);
+          // add custom data to the marker
+          marker.setData(html);
+          group.addObject(marker);
+      };
+
 
       document.addEventListener("turbolinks:load", function () {
           navigator.geolocation.getCurrentPosition(
               function(pos) {
                   var crd = pos.coords;
-                  show(crd.latitude, crd.longitude)
+                  events(crd.latitude, crd.longitude)
               }, err, options);
 
           // App Id  :
           //     ABCiZ2b67vjKqbX6E1ZJ
           // App Code :
           //     do7aaovSpr9tNPfJkLxG4Q
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               });
   </script>
