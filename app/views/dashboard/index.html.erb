@@ -23,6 +23,7 @@
                       <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
                       <p>Date: <%= concert.date %></p>
 
+                      <a class="btn search" href="https://www.eventbrite.com/d/<%= concert.country['name'] %>--<%= concert.city %>/<%= artist_name %>/?q=<%= artist_name %>&loc=<%= concert.city %>&date=" target="_blank">Buy your ticket!</a>
                       </span>
                   </div>
                 </div>
