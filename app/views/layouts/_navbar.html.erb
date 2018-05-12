@@ -5,7 +5,7 @@
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <% if user_signed_in? %>
           <a class="dropdown-trigger right hide-on-med-and-down" href="#!" data-target="dropdown1">
-            <%= image_tag current_user.avatar_url, class: 'avatar' %>
+            <%= image_tag current_user.avatar_url || 'default_avatar', class: 'avatar' %>
             <div> <%= current_spotify_user.display_name ||current_spotify_user.id  %> <i class="material-icons right">arrow_drop_down</i></div>
           </a>
 
