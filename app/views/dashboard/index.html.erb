@@ -1,26 +1,40 @@
-<%current_spotify_user.top_artists.each do |event|%>
-  <div class="container">
-    <div class="row">
-      <div class="col s2 m2 h2"></div>
-      <div id="events" class="col s6 m6 h6">
+<%= render partial: "map" %>
+<%= render partial: "filters" %>
+
+<% (@events || []).each_value do |artist_concerts| %>
+  <% artist_name = artist_concerts[0].artist if artist_concerts[0].respond_to?(:artist)%>
+  <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
+  <% Array(artist_concerts || []).each do |concerts| %>
+    <% Array(concerts || []).each do |concert| %>
+      <div class="container">
         <div class="row">
-          <div class="card sticky-action horizontal">
-            <div class="card-image waves-effect waves-block waves-light">
-              <img class="activator" src="<%= event.images.first['url'] rescue nil %>" />
-            </div>
-            <div class="card-stacked">
-              <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4"><%= event.name%><i class="material-icons right">more_vert</i></span>
+          <div class="col s2 m2 h2"></div>
+          <div id="events" class="col s8 m8 l8">
+            <div class="row">
+              <div class="card sticky-action horizontal">
+                <div class="card-image waves-effect waves-block waves-light">
+                  <img class="activator" src="<%= artist.images.first['url'] rescue nil %>" />
+                </div>
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">
+                      <p>Artist Name: <%= artist_name %></p>
+                      <p>Venue: <%= concert.venue %></p>
+                      <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
+                      <p>Date: <%= concert.date %></p>
+
+                      </span>
+                  </div>
+                </div>
+                <div class="card-reveal">
+                  <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                  <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                </div>
               </div>
-            </div>
-            <div class="card-reveal">
-              <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-              <p>Here is some more information about this product that is only revealed once clicked on.</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    <%end%>
+  <%end%>
 <%end%>
-<%= @events %>
