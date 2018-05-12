@@ -1,6 +1,8 @@
 class DashboardController < ApplicationController
   def index
-    @top_artists = current_spotify_user.top_artists(limit: 10, offset: 0, time_range: 'short_term')
+    limit = 10
+    offset = (params[:offset] || 0 ).to_i * limit
+    @top_artists = current_spotify_user.top_artists(limit: limit, offset: offset, time_range: 'short_term')
     @events = @top_artists.map do |a|
       artist_events = Rails.cache.fetch(a.id)
 

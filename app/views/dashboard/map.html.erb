@@ -4,15 +4,24 @@
 <p>This example displays a movable map initially centered on the <b>Brandenburg Gate</b> in the centre of Berlin (<i>52.5159°N, 13.3777°E</i>)</p>
 <hr/>
 <div id="mapContainer" style="width: 1000px; height: 700px; background: grey"></div>
+<input type="button" id="next" value="Next" onclick="next_events()"/>
+<input type="button" id="focus" value="Focus" onclick="focus_on_events()"/>
 
 <% content_for :javascripts do %>
   <script>
-
       var platform = new H.service.Platform({
           'app_id': 'ABCiZ2b67vjKqbX6E1ZJ',
           'app_code': 'do7aaovSpr9tNPfJkLxG4Q'
       });
+      var map= null;
+      var ui = null;
+      var group = new H.map.Group();
+      var offset = 0;
       var geocoder = platform.getGeocodingService();
+      var lat = null;
+      var long = null;
+      var crd = null;
+
 
       var options = {
           enableHighAccuracy: true,
@@ -21,7 +30,7 @@
       };
 
       var err = function(err) {
-        console.log(err);
+          console.log(err);
       };
 
       var events = function(lat, long) {
@@ -32,33 +41,48 @@
                       datapoints.push(val1);
                   });
               });
-              show(lat,long, datapoints);
+              show(crd.latitude, crd.longitude, datapoints);
           });
 
       };
+
+      var next_events = function() {
+          offset = offset + 1;
+          $.getJSON( "/dashboard.json?offset="+offset, function( data ) {
+              var datapoints = [];
+              $.each(data, function( key, val ) {
+                  $.each(val, function( key1, val1 ) {
+                      datapoints.push(val1);
+                  });
+              });
+              show(crd.latitude, crd.longitude, datapoints);
+          });
+
+      };
+
       var show = function(lat, long, datapoints) {
           // Instantiate the map:
-          var map = new H.Map(
-              document.getElementById('mapContainer'),
-              platform.createDefaultLayers().normal.map,
-              {
-                  zoom: 3,
-                  center: { lat: lat, lng: long }
-              });
-          var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-          var ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
+          if (map == null) {
+              map = new H.Map(
+                  document.getElementById('mapContainer'),
+                  platform.createDefaultLayers().normal.map,
+                  {
+                      zoom: 3,
+                      center: { lat: lat, lng: long }
+                  });
+              behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+              ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
 
-          var group = new H.map.Group();
-          map.addObject(group);
+              map.addObject(group);
+          }
 
           // add 'tap' event listener, that opens info bubble, to the group
           group.addEventListener('tap', function (evt) {
-              alert('click happened');
               ui.addBubble(new H.ui.InfoBubble(evt.target.getPosition(), {content: evt.target.getData()}));
           }, false);
 
           $.each(datapoints, function(key, val) {
-             addMarkerToGroup(group, {lat: val['coords']['lat'], lng: val['coords']['long']}, '<div>' + val['artist'] + ', on: ' + val['date'] + '</div>');
+              addMarkerToGroup(group, {lat: val['coords']['lat'], lng: val['coords']['long']}, '<div>' + val['artist'] + ', on: ' + val['date'] + '</div>');
           });
 
       };
@@ -70,11 +94,50 @@
           group.addObject(marker);
       };
 
+      var crd = null;
+
+      var focus_on_events = function() {
+          var groups= [[], [], [], []];
+
+          group.forEach(function(m) {
+              var position = m.getPosition();
+              var index= 0;
+              if (position.lat < 0.0 && position.lng < 0.0) {
+                  index = 0;
+              } else if (position.lat < 0.0 && position.lng > 0.0) {
+                  index = 1;
+              } else if (position.lat > 0.0 && position.lng < 0.0) {
+                  index = 2;
+              } else {
+                  index = 3;
+              }
+              console.log(position.lat + '   ' + position.lng);
+              groups[index].push(m);
+          });
+          var biggest_group = groups[0];
+          groups.forEach(function(g){
+             if (biggest_group.length < g.length) {
+                 biggest_group = g;
+             }
+             console.log( g.length);
+          });
+
+          var bounds = null;
+          $.each(biggest_group, function(k, v){
+              var position = v.getPosition();
+              if (bounds == null) {
+                  bounds = position.getBounds();
+              } else {
+                  bounds = bounds.mergePoint(position);
+              }
+          });
+          map.setViewBounds(bounds);
+      };
 
       document.addEventListener("turbolinks:load", function () {
           navigator.geolocation.getCurrentPosition(
               function(pos) {
-                  var crd = pos.coords;
+                  crd = pos.coords;
                   events(crd.latitude, crd.longitude)
               }, err, options);
 
@@ -83,7 +146,7 @@
           // App Code :
           //     do7aaovSpr9tNPfJkLxG4Q
 
-              });
+      });
   </script>
 
 <% end %>
