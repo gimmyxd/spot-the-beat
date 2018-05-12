@@ -1,5 +1,5 @@
 class Artist
-  attr_accessor :name, :mbid, :events
+  attr_accessor :name, :events
 
   def initialize(artist_name)
     @name = artist_name
@@ -19,7 +19,9 @@ class Artist
   end
 
   def event_data
-    event_helper.search_setlists(@name).body['setlist']
+    event_helper.filter_setlists({artistName: @name,
+                                  p: '1',
+                                  year: Date.current.year.to_s}).body['setlist']
   end
 
   def mbid_helper

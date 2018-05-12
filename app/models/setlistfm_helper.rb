@@ -76,5 +76,11 @@ class SetlistfmHelper
     end
   end
 
+  def filter_setlists params
+    @http.get "/rest/#{@api_version}/search/setlists/" do |r|
+      r.params = params
+    end
+  end
+
   freeze
 end

@@ -16,4 +16,8 @@ class DashboardController < ApplicationController
       format.json {render json: @events, status: :ok}
     end
   end
+
+  def search(params)
+    @filtered_events = FilteredEvents.new(params).get_filtered_events
+  end
 end
