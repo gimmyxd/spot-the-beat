@@ -8,22 +8,9 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= favicon_link_tag 'fav.png', type: 'image/png'%>
   </head>
-  <header class="navbar-fixed">
-    <nav>
-      <div class="nav-wrapper container">
-        <a href="#" class="brand-logo">Logo</a>
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        <a class="dropdown-trigger right hide-on-med-and-down" href="#!" data-target="dropdown1">
-          Hello, @username<i class="material-icons right">arrow_drop_down</i>
-        </a>
-        <ul id="dropdown1" class="dropdown-content">
-          <li><a href="#!">one</a></li>
-          <li><a href="#!">two</a></li>
-          <li><a href="#!">three</a></li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+
+  <%= render partial: "layouts/navbar"%>
+
   <ul class="sidenav" id="mobile-demo">
     <li><a href="#!">one</a></li>
     <li><a href="#!">two</a></li>
