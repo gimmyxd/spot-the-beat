@@ -1,7 +1,0 @@
-<h1>Index page</h1>
-<% if user_signed_in? %>
-  <span>Welcome, <%= current_user.username %> !</span>
-  <%= image_tag current_user.avatar_url %>
-<% else %>
-  <%= link_to 'Sign in', new_session_path %>
-<% end %>

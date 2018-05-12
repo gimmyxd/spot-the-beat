@@ -11,13 +11,15 @@ class SessionsController < ApplicationController
   def callback
     user = User.find_by(provider: auth.provider, uid: auth.uid) || User.create_with_omniauth(auth)
     reset_session
-    session[:user_id] = user.id
-    redirect_to root_url, :notice => 'Signed in!'
+    session[:user_id]   = user.id
+    session[:auth_data] = auth.deep_stringify_keys
+
+    redirect_to dashboard_url
   end
 
   def destroy
     reset_session
-    redirect_to root_url, :notice => 'Signed out!'
+    redirect_to root_url
   end
 
   private

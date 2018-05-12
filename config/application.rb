@@ -30,6 +30,7 @@ module SpotTheBeat
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    RSpotify::authenticate(ENV['SPOTIFY_CLIENT_ID'], ENV['SPOTIFY_CLIENT_SECRET'])
+    spotify_creds = Rails.application.credentials.spotify
+    RSpotify::authenticate(spotify_creds[:client_id], spotify_creds[:client_secret])
   end
 end

@@ -1,6 +1,7 @@
-<<<<<<< HEAD
-spotfiy_creds = Rails.application.credentials.spotify
-auth_scopes = %w(
+require 'rspotify/oauth'
+
+spotify_creds = Rails.application.credentials.spotify
+auth_scopes   = %w(
   user-top-read
   user-follow-read
   user-read-private
@@ -9,17 +10,5 @@ auth_scopes = %w(
 )
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :spotify, spotfiy_creds[:client_id], spotfiy_creds[:client_secret], scope: auth_scopes
+  provider :spotify, spotify_creds[:client_id], spotify_creds[:client_secret], scope: auth_scopes.join(' ')
 end
-=======
-require 'rspotify/oauth'
-
-Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :spotify,
-           ENV['SPOTIFY_CLIENT_ID'],
-           ENV['SPOTIFY_CLIENT_SECRET'],
-           {
-               scope: 'user-read-email playlist-modify-public user-library-read user-library-modify user-top-read'
-           }
-end
->>>>>>> master
