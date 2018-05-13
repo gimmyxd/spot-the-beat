@@ -1,6 +1,6 @@
 <%= render partial: "map" %>
 <%= render partial: "filters" %>
-<% if @events.length > 1 || @events["1"].present? %>
+<% if events_present(@events) %>
   <% (@events || []).each_value do |artist_concerts| %>
     <% Array(artist_concerts || []).each do |concerts| %>
       <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
@@ -42,7 +42,7 @@
     <%end%>
 <%end%>
 <% else %>
-    <div class="landing-text">
+    <div class="error-text">
           <p>We're sorry, this artist has no upcoming events :( </p>
     </div>
 <% end %>
