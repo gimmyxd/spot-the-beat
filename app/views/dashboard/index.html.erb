@@ -1,6 +1,7 @@
 <%= render partial: "map" %>
 <%= render partial: "filters" %>
-<% if @events.length > 1 || @events["1"].present? %>
+<% if events_present(@events) %>
+    <% binding.pry %>
   <% (@events || []).each_value do |artist_concerts| %>
     <% Array(artist_concerts || []).each do |concerts| %>
       <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
