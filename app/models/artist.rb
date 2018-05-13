@@ -15,7 +15,7 @@ class Artist
   end
 
   def get_upcoming_events
-    @events.select {|event| event.date > Date.yesterday}
+    @events
   end
 
   def event_data

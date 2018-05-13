@@ -14,7 +14,7 @@ class FilteredEvents
   end
 
   def get_filtered_events
-    @events.select {|event| event.date > Date.yesterday}
+    @events
   end
 
   def event_data(params)
