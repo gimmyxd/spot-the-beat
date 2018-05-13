@@ -67,3 +67,5 @@ gem 'dotenv-rails'
 
 gem 'rails_admin'
 gem 'omniauth-uber'
+
+gem 'rails_12factor'
