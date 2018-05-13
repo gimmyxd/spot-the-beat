@@ -25,6 +25,7 @@
                       <div class="promo-buttons">
                         <a class="btn" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
                         <a class="btn right buy" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
+                        <a class="btn right" href="/ride?lat=<%= concert.coords['lat'] %>&long=<%= concert.coords['long'] %>">Find a ride</a>
                       </div>
                     </span>
                   </div>

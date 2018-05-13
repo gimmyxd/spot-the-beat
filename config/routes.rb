@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get 'landing', to: 'static_pages#landing'
   get 'dashboard', to: 'dashboard#index'
+  get 'ride', to: 'dashboard#ride'
   root 'static_pages#landing'
   get '/auth/:provider/callback/', to: 'sessions#callback'
   get 'map', to: 'sessions#map'

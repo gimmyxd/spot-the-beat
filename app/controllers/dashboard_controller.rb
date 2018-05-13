@@ -25,6 +25,9 @@ class DashboardController < ApplicationController
     end
   end
 
+  def play
+
+  end
   private
 
   def search_params

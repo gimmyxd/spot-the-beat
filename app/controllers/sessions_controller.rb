@@ -9,12 +9,25 @@ class SessionsController < ApplicationController
   end
 
   def callback
-    user = User.find_by(provider: auth.provider, uid: auth.uid) || User.create_with_omniauth(auth)
-    reset_session
-    session[:user_id]   = user.id
-    session[:auth_data] = auth.deep_stringify_keys
+    user = User.find_by(email: auth.email)
+    if user
+      user.spotify_data=auth.to_json if auth.provider == 'spotify'
+      user.uber_data=auth.to_json if auth.provider == 'uber'
+      user.save
+    else
+      user =  User.create_with_omniauth(auth)
+    end
 
-    redirect_to dashboard_url
+    reset_session
+    session[:email] = user.email
+    session["auth_data_spotify"] = user.spotify_data
+    session["auth_data_uber"] = user.uber_data
+    session.delete('state')
+    if auth.provider == 'uber'
+      redirect_to dashboard_url
+    else
+      redirect_to dashboard_url
+    end
   end
 
   def destroy
