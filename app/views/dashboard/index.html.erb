@@ -1,44 +1,48 @@
 <%= render partial: "map" %>
 <%= render partial: "filters" %>
-
-<% (@events || []).each_value do |artist_concerts| %>
-  <% Array(artist_concerts || []).each do |concerts| %>
-    <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
-    <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
-    <% Array(concerts || []).each do |concert| %>
-      <div class="container events-list">
-        <div class="row">
-          <div class="col s1 m1 h1"></div>
-          <div id="events" class="col s10 m10 l10">
-            <div class="row">
-              <div class="card sticky-action horizontal">
-                <div class="card-image waves-effect waves-block waves-light">
-                  <img class="activator" src="<%= artist.images.first['url'] rescue nil %>" />
-                </div>
-                <div class="card-stacked">
-                  <div class="card-content">
-                    <span class="card-title activator grey-text text-darken-4">
-                      <p>Artist Name: <%= artist_name %></p>
-                      <p>Venue: <%= concert.venue %></p>
-                      <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
-                      <p>Date: <%= concert.date %></p>
-                      <div class="promo-buttons">
-                        <a class="btn" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
-                        <a class="btn right buy" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
-                        <a class="btn right" href="/ride?lat=<%= concert.coords['lat'] %>&long=<%= concert.coords['long'] %>">Find a ride</a>
-                      </div>
-                    </span>
+<% if events_present(@events) %>
+  <% (@events || []).each_value do |artist_concerts| %>
+    <% Array(artist_concerts || []).each do |concerts| %>
+      <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
+      <% artist = (RSpotify::Artist.search(artist_name) || [])[0] if (artist || NullArtist.new).name != artist_name%>
+      <% Array(concerts || []).each do |concert| %>
+        <div class="container events-list">
+          <div class="row">
+            <div class="col s1 m1 h1"></div>
+            <div id="events" class="col s10 m10 l10">
+              <div class="row">
+                <div class="card sticky-action horizontal">
+                  <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" src="<%= artist.images.first['url'] rescue nil %>" />
                   </div>
-                </div>
-                <div class="card-reveal">
-                  <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-                  <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                  <div class="card-stacked">
+                    <div class="card-content">
+                      <span class="card-title activator grey-text text-darken-4">
+                        <p>Artist Name: <%= artist_name %></p>
+                        <p>Venue: <%= concert.venue %></p>
+                        <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
+                        <p>Date: <%= concert.date %></p>
+                        <div class="promo-buttons">
+                          <a class="btn" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
+                          <a class="btn right buy" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      <%end%>
     <%end%>
-  <%end%>
 <%end%>
+<% else %>
+    <div class="error-text">
+          <p>We're sorry, this artist has no upcoming events :( </p>
+    </div>
+<% end %>

@@ -33,6 +33,8 @@ options =
 search = new (H.places.Search)(platform.getPlacesService())
 searchResult = undefined
 error = undefined
+concertBubble = undefined
+accomodationBubble = undefined
 
 err = (err) ->
   error = err
@@ -97,7 +99,9 @@ show = (lat, long, datapoints) ->
     loc = evt.target.getPosition()
     map.setZoom(14)
     map.setCenter(loc)
-    ui.addBubble new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+    closeOpenedBubbles()
+    concertBubble = new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+    ui.addBubble concertBubble
 
     params = {q: 'hotel', at: "#{loc.lat},#{loc.lng}"}
 
@@ -107,6 +111,8 @@ show = (lat, long, datapoints) ->
   ), false
 
   $('#area-size').on 'change', (event) ->
+    closeOpenedBubbles()
+    accGroup.removeAll()
     newRadius = $(this).val()
     circle.setRadius newRadius
     $('.area-size-badge').html newRadius / 1000 + ' (km)'
@@ -196,9 +202,21 @@ addAccomodationMarkers = (searchResult) ->
   map.addObject(accGroup)
 
   accGroup.addEventListener 'tap', (evt) ->
+    closeOpenedBubbles()
     loc = evt.target.getPosition()
-    ui.addBubble new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+    accomodationBubble = new (H.ui.InfoBubble)(loc, content: evt.target.getData())
+    ui.addBubble accomodationBubble
     return
+  return
+
+closeOpenedBubbles = () ->
+  if concertBubble != undefined
+    ui.removeBubble(concertBubble)
+    concertBubble.close()
+
+  if accomodationBubble != undefined
+    ui.removeBubble(accomodationBubble)
+    accomodationBubble.close()
   return
 
 document.addEventListener 'turbolinks:load', ->
