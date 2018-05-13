@@ -58,10 +58,17 @@
 .promo-buttons {
   position: absolute;;
   bottom: 50px;
+  display: table-row;
+}
+
+.btn_pe_row {
+  display: table-cell;
+  padding-left: 10px;
+  min-width: 80px;
 }
 
 .buy {
-  margin-left: 90px;
+  //margin-left: 90px;
 }
 
 .map-bg, .map-filters {

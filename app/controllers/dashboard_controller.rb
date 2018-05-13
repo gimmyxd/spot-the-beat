@@ -31,6 +31,6 @@ class DashboardController < ApplicationController
   private
 
   def search_params
-    params.permit(:cityName, :artistName).reject { |_k, v| v.blank? }
+    params.permit(:cityName, :artistName, :format).reject { |_k, v| v.blank? }
   end
 end

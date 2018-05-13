@@ -1,18 +1,26 @@
 
 <% if current_user.uber_data %>
+  <iframe src="https://wego.here.com/discover/city-town-village?map=<%= params[:lat]%>,<%=params[:long]%>,12,normal&x=ep"
+          width="100%" height="700"></iframe>
+
   <div style="background-color: whitesmoke; width: 100%">
      You can use <br/>
 
     <% uber_products = uber_products(params[:lat], params[:long])['products']
-       puts uber_products.class
        uber_products.each do |p| %>
-      <img src="<%=p['image']%>" />
+      <div style="width: 70px; display:table-cell; border-color: grey; padding: 10px">
+        <a href="https://m.uber.com/looking">
+            <img height="30px" src="<%=p['image']%>" alt="<%= p['description']%>"/>
+        </a><br/><span style="width: 30px; overflow-wrap: break-word; "><%= p['description']%></span>
+
+      </div>
     <% end %>
 </div>
-  <iframe src="https://wego.here.com/discover/city-town-village?map=<%= params[:lat]%>,<%=params[:long]%>,12,normal&x=ep"
-          width="100%" height="700"/>
 <% else %>
   <a class="waves-effect waves-light btn login" href="/auth/uber">
     <h6 class="login-text">Login with Uber</h6>
   </a>
 <% end %>
+<br/>
+<a class="btn" href="/dashboard">Choose a different concert</a>
+

@@ -4,7 +4,7 @@ class User < ApplicationRecord
     create! do |user|
       user.provider = auth.provider
       user.uid = auth.uid
-      user.email = auth.email
+      user.email = auth.info.email
       user.avatar_url = auth.info.images.first.url if auth&.info&.images&.first
       user.spotify_data=auth.to_json if auth.provider == 'spotify'
       user.uber_data=auth.to_json if auth.provider == 'uber'

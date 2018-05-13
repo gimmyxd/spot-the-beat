@@ -1,6 +1,7 @@
 <%= render partial: "map" %>
 <%= render partial: "filters" %>
-<% if events_present(@events) %>
+
+<% if (!@events.empty?) %>
   <% (@events || []).each_value do |artist_concerts| %>
     <% Array(artist_concerts || []).each do |concerts| %>
       <% artist_name = concerts.artist if concerts.respond_to?(:artist)%>
@@ -17,20 +18,22 @@
                   </div>
                   <div class="card-stacked">
                     <div class="card-content">
-                      <span class="card-title activator grey-text text-darken-4">
-                        <p>Artist Name: <%= artist_name %></p>
-                        <p>Venue: <%= concert.venue %></p>
-                        <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
-                        <p>Date: <%= concert.date %></p>
-                        <div class="promo-buttons">
-                          <a class="btn" href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a>
-                          <a class="btn right buy" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a>
-                        </div>
-                      </span>
+                    <span class="card-title activator grey-text text-darken-4">
+                      <p>Artist Name: <%= artist_name %></p>
+                      <p>Venue: <%= concert.venue %></p>
+                      <p>Location: <%= concert.city %> <%= concert.country['name'] %></p>
+                      <p>Date: <%= concert.date %></p>
+
+                    </span>
+                      <div class="promo-buttons">
+                        <a class="btn btn_pe_row"  href="https://seatgeek.com/<%= artist_name %>-tickets?lat=<%= concert.coords['lat'] %>&lon=<%= concert.coords['long'] %>"  target="_blank">Buy your ticket! </a><br/>
+                        <a class="btn btn_pe_row" style="display: table-cell; padding-left: 10px" href="https://www.airbnb.com/s/<%=concert.city%>" target="_blank">Book your hotel!</a><br/>
+                        <a class="btn btn_pe_row" style="display: table-cell; padding-left: 10px" href="/ride?lat=<%= concert.coords['lat'] %>&long=<%= concert.coords['long'] %>">Find a ride</a>
+                      </div>
                     </div>
                   </div>
                   <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                    <span class="card-title grey-text text-darken-4">Card Titlre<i class="material-icons right">close</i></span>
                     <p>Here is some more information about this product that is only revealed once clicked on.</p>
                   </div>
                 </div>
@@ -40,9 +43,10 @@
         </div>
       <%end%>
     <%end%>
-<%end%>
+  <%end%>
+
 <% else %>
-    <div class="error-text">
-          <p>We're sorry, this artist has no upcoming events :( </p>
-    </div>
+  <div class="error-text">
+    <p>We're sorry, this artist has no upcoming events :( </p>
+  </div>
 <% end %>
